@@ -53,16 +53,34 @@ The examples depend on the library through `workspace:*`, so run `pnpm build`
 ## Releasing (maintainers)
 
 1. Bump `version` in `packages/baked-icons/package.json` and move the `[Unreleased]`
-   notes in `CHANGELOG.md` under the new version.
-2. Commit, tag (`git tag vX.Y.Z`) and push the tag.
-3. Create a GitHub Release from the tag. The `Release` workflow builds, tests and
-   publishes to npm through trusted publishing (OIDC); no token secret is required.
+   notes in `CHANGELOG.md` under the new version. Commit and push to `main`.
+2. Create a GitHub Release with a `vX.Y.Z` tag (the tag must match the package version).
+   On GitHub: **Releases -> Draft a new release -> Choose a tag -> type `vX.Y.Z` ->
+   Create new tag on publish**, paste the changelog entry, **Publish release**.
+3. The `Release` workflow builds, tests and runs `npm stage publish` through trusted
+   publishing (OIDC). Nothing is live yet.
+4. Approve the staged version with 2FA, either on npmjs.com (package page ->
+   **Staged Packages** -> Approve) or from a terminal:
 
-The very first version must be published manually, because npm only lets you configure
-a trusted publisher for a package that already exists:
+   ```sh
+   npm stage list @nyawave/baked-icons
+   npm stage approve <stage-id>
+   ```
+
+No npm token is stored anywhere; publishing rights come from the trusted-publisher
+configuration on npmjs.com (organization `nyawave`, repository `baked-icons`, workflow
+`release.yml`).
+
+### First release of a new package
+
+npm cannot stage or trust-publish a package that does not exist yet, so the very first
+version is published by hand:
 
 ```sh
 cd packages/baked-icons
 npm login
-pnpm publish --access public
+npm publish --access public
 ```
+
+Afterwards add the trusted publisher on the package's **Settings -> Publishing access**
+page (or `npm trust github @nyawave/baked-icons --repo nyawave/baked-icons --file release.yml --allow-stage-publish`).

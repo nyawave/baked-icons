@@ -1,14 +1,19 @@
 name: Release
 
-# Publishes @nyawave/baked-icons to npm when a GitHub Release is published.
+# Stages @nyawave/baked-icons on npm when a GitHub Release is published.
 #
-# Authentication uses npm "trusted publishing" (OIDC), so no NPM_TOKEN secret
-# is needed. One-time setup on npmjs.com:
-#   package settings -> Publishing access -> Trusted publisher -> GitHub Actions
+# The package is NOT live after this workflow: it lands in the npm staging
+# queue and a maintainer approves it (with 2FA) on npmjs.com under
+# "Staged Packages", or with `npm stage approve <stage-id>`.
+#
+# Authentication uses npm trusted publishing (OIDC), so no NPM_TOKEN secret is
+# needed. One-time setup on npmjs.com after the first manual publish:
+#   package settings -> Publishing access -> Add trusted publisher -> GitHub Actions
 #   organization: nyawave   repository: baked-icons   workflow: release.yml
-# The very first version has to be published manually (see CONTRIBUTING.md),
-# because the trusted-publisher form only exists for packages that already
-# exist on the registry.
+#   allowed actions: "stage publish" (default)
+# The very first version has to be published manually (see CONTRIBUTING.md):
+# npm cannot stage a package that does not exist yet, and the trusted-publisher
+# form only exists for packages that are already on the registry.
 
 on:
   release:
@@ -20,8 +25,8 @@ permissions:
   id-token: write
 
 jobs:
-  publish:
-    name: Publish to npm
+  stage:
+    name: Stage on npm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -33,6 +38,9 @@ jobs:
           node-version: 24
           cache: pnpm
           registry-url: https://registry.npmjs.org
+
+      # `npm stage` needs npm >= 11.15; make sure the runner has a recent CLI.
+      - run: npm install -g npm@latest && npm --version
 
       - run: pnpm install --frozen-lockfile
 
@@ -52,6 +60,10 @@ jobs:
             exit 1
           fi
 
-      - name: Publish
+      - name: Stage publish
         working-directory: packages/baked-icons
-        run: npm publish --provenance --access public
+        run: npm stage publish --provenance --access public
+
+      - name: Next step
+        run: |
+          echo "::notice title=Approve on npm::The package is staged. Approve it at https://www.npmjs.com/package/@nyawave/baked-icons (Staged Packages) or run 'npm stage approve <id>'."
