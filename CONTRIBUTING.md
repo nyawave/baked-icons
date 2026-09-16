@@ -5,7 +5,7 @@ pull requests are welcome.
 
 ## Development setup
 
-Requirements: Node.js 20+ and [pnpm](https://pnpm.io). The exact pnpm version is pinned
+Requirements: Node.js 22+ (the published package itself supports Node 20+) and [pnpm](https://pnpm.io). The exact pnpm version is pinned
 in the root `package.json` (`packageManager`), so `corepack enable` picks it up automatically.
 
 ```sh

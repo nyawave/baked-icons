@@ -63,7 +63,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "oxlint src test",
-    "prepublishOnly": "pnpm run build && pnpm run test"
+    "prepublishOnly": "npm run build && npm run test"
   },
   "peerDependencies": {
     "next": ">=14",
