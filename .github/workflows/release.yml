@@ -1,19 +1,6 @@
 name: Release
 
 # Stages @nyawave/baked-icons on npm when a GitHub Release is published.
-#
-# The package is NOT live after this workflow: it lands in the npm staging
-# queue and a maintainer approves it (with 2FA) on npmjs.com under
-# "Staged Packages", or with `npm stage approve <stage-id>`.
-#
-# Authentication uses npm trusted publishing (OIDC), so no NPM_TOKEN secret is
-# needed. One-time setup on npmjs.com after the first manual publish:
-#   package settings -> Publishing access -> Add trusted publisher -> GitHub Actions
-#   organization: nyawave   repository: baked-icons   workflow: release.yml
-#   allowed actions: "stage publish" (default)
-# The very first version has to be published manually (see CONTRIBUTING.md):
-# npm cannot stage a package that does not exist yet, and the trusted-publisher
-# form only exists for packages that are already on the registry.
 
 on:
   release:

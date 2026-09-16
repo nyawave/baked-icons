@@ -58,7 +58,7 @@ The examples depend on the library through `workspace:*`, so run `pnpm build`
    On GitHub: **Releases -> Draft a new release -> Choose a tag -> type `vX.Y.Z` ->
    Create new tag on publish**, paste the changelog entry, **Publish release**.
 3. The `Release` workflow builds, tests and runs `npm stage publish` through trusted
-   publishing (OIDC). Nothing is live yet.
+   publishing (OIDC).
 4. Approve the staged version with 2FA, either on npmjs.com (package page ->
    **Staged Packages** -> Approve) or from a terminal:
 
@@ -67,9 +67,7 @@ The examples depend on the library through `workspace:*`, so run `pnpm build`
    npm stage approve <stage-id>
    ```
 
-No npm token is stored anywhere; publishing rights come from the trusted-publisher
-configuration on npmjs.com (organization `nyawave`, repository `baked-icons`, workflow
-`release.yml`).
+No npm token is stored anywhere;
 
 ### First release of a new package
 
