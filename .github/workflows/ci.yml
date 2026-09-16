@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm typecheck
+
+      - name: Build examples (Vite + Next.js Turbopack)
+        run: pnpm build:examples
+
+      - name: Build Next.js example with webpack
+        run: pnpm --filter example-next-app build:webpack
+
+      - name: Check publish contents
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 24
+        working-directory: packages/baked-icons
+        run: npm pack --dry-run

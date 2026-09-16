@@ -1,0 +1,17 @@
+{
+  "name": "baked-icons-monorepo",
+  "private": true,
+  "packageManager": "pnpm@12.4.2",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm --filter @nyawave/baked-icons build",
+    "dev": "pnpm --filter @nyawave/baked-icons dev",
+    "test": "pnpm --filter @nyawave/baked-icons test",
+    "lint": "pnpm --filter @nyawave/baked-icons lint",
+    "typecheck": "pnpm -r typecheck",
+    "build:examples": "pnpm --filter './examples/*' build",
+    "ci": "pnpm build && pnpm test && pnpm typecheck && pnpm build:examples"
+  }
+}
