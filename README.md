@@ -313,15 +313,17 @@ This is a pnpm monorepo.
 | `packages/baked-icons` | the published package (`@nyawave/baked-icons`)    |
 | `examples/vite-react`  | Vite 8 + React 19 playground                      |
 | `examples/next-app`    | Next.js 16 (App Router, RSC, Turbopack + webpack) |
+| `site`                 | landing page, Next.js 16 static export to `site/out` |
 
 ```sh
 pnpm install
 pnpm build            # build the library (tsdown)
 pnpm test             # vitest
-pnpm typecheck        # tsc --noEmit across all workspace packages
+pnpm typecheck        # tsc --noEmit for the library and examples
 pnpm build:examples   # build both examples
 pnpm --filter example-vite-react dev
 pnpm --filter example-next-app dev
+pnpm dev:site         # landing page; pnpm build:site writes static HTML to site/out
 ```
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full development and release workflow, and
