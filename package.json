@@ -10,8 +10,10 @@
     "dev": "pnpm --filter @nyawave/baked-icons dev",
     "test": "pnpm --filter @nyawave/baked-icons test",
     "lint": "pnpm --filter @nyawave/baked-icons lint",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm -r --filter '!site' typecheck",
     "build:examples": "pnpm --filter './examples/*' build",
+    "dev:site": "pnpm --filter site dev",
+    "build:site": "pnpm --filter site build",
     "ci": "pnpm build && pnpm test && pnpm typecheck && pnpm build:examples"
   }
 }

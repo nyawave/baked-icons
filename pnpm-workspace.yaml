@@ -1,6 +1,7 @@
 packages:
   - packages/*
   - examples/*
+  - site
 minimumReleaseAgeExclude:
   - '@types/node@22.20.3'
   - '@vitest/mocker@5.0.1'

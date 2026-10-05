@@ -1,0 +1,13 @@
+{
+  "prefix": "bi",
+  "width": 22,
+  "height": 22,
+  "icons": {
+    "logo": {
+      "body": "<rect width=\"10\" height=\"10\" rx=\"3\" fill=\"currentColor\" opacity=\".22\"/><rect x=\"12\" width=\"10\" height=\"10\" rx=\"3\" fill=\"currentColor\" opacity=\".22\"/><rect y=\"12\" width=\"10\" height=\"10\" rx=\"3\" fill=\"currentColor\" opacity=\".22\"/><rect x=\"12\" y=\"12\" width=\"10\" height=\"10\" rx=\"5\" style=\"fill:var(--acc,#2563eb)\"/>"
+    },
+    "logo-missing": {
+      "body": "<rect width=\"10\" height=\"10\" rx=\"3\" fill=\"currentColor\" opacity=\".22\"/><rect x=\"12\" width=\"10\" height=\"10\" rx=\"3\" fill=\"currentColor\" opacity=\".22\"/><rect y=\"12\" width=\"10\" height=\"10\" rx=\"3\" fill=\"currentColor\" opacity=\".22\"/><rect x=\"12.6\" y=\"12.6\" width=\"8.8\" height=\"8.8\" rx=\"4.4\" fill=\"none\" stroke-width=\"1.2\" stroke-dasharray=\"1.75 1.6\" style=\"stroke:var(--acc,#2563eb)\"/>"
+    }
+  }
+}
