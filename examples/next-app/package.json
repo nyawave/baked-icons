@@ -16,9 +16,9 @@
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.135",
+    "@iconify-json/lucide": "^1.2.138",
     "@iconify-json/mdi": "^1.2.3",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "typescript": "^7.0.2"
