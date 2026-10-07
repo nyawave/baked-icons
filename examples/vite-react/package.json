@@ -14,7 +14,7 @@
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.138",
+    "@iconify-json/lucide": "^1.2.139",
     "@iconify-json/mdi": "^1.2.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
