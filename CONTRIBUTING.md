@@ -33,7 +33,7 @@ pnpm test             # vitest
 pnpm lint             # oxlint
 pnpm typecheck        # tsc --noEmit across all workspace packages
 pnpm build:examples   # build both examples against the local build
-pnpm ci               # everything CI runs, in order
+pnpm run ci           # everything CI runs, in order
 
 pnpm --filter example-vite-react dev
 pnpm --filter example-next-app dev
@@ -47,7 +47,7 @@ The examples depend on the library through `workspace:*`, so run `pnpm build`
 - Keep changes focused. For larger features, open an issue first so the design can be
   discussed.
 - Add or update tests in `packages/baked-icons/test` for behaviour changes.
-- Make sure `pnpm ci` passes locally.
+- Make sure `pnpm run ci` passes locally.
 - Add an entry to the `[Unreleased]` section of `CHANGELOG.md`.
 
 ## Releasing (maintainers)
@@ -67,18 +67,4 @@ The examples depend on the library through `workspace:*`, so run `pnpm build`
    npm stage approve <stage-id>
    ```
 
-No npm token is stored anywhere;
-
-### First release of a new package
-
-npm cannot stage or trust-publish a package that does not exist yet, so the very first
-version is published by hand:
-
-```sh
-cd packages/baked-icons
-npm login
-npm publish --access public
-```
-
-Afterwards add the trusted publisher on the package's **Settings -> Publishing access**
-page (or `npm trust github @nyawave/baked-icons --repo nyawave/baked-icons --file release.yml --allow-stage-publish`).
+No npm token is stored anywhere.
