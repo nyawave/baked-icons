@@ -1,6 +1,6 @@
 {
   "name": "@nyawave/baked-icons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Iconify-compatible React <Icon> whose icons are baked into your bundle at build time. Zero runtime fetching, SSR/RSC friendly. Vite + Next.js (Turbopack/webpack).",
   "license": "MIT",
   "author": "IXackerr (https://github.com/IXackerr)",
