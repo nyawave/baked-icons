@@ -18,7 +18,7 @@ export const HOME_FAQ: FaqItem[] = [
   },
   {
     q: 'What is a drop-in alternative to @iconify/react?',
-    a: '@nyawave/baked-icons keeps the same <Icon icon="prefix:name" /> API and the same props (width, height, rotate, flip, color, inline, title), because rendering goes through @iconify/utils just like in @iconify/react. Migrating is one import change per file, plus one plugin in your bundler config.',
+    a: '@nyawave/baked-icons keeps the same <Icon icon="prefix:name" /> API and the same props (width, height, rotate, flip, color, inline, title), because rendering produces the same SVG as @iconify/react (tested against @iconify/utils). Migrating is one import change per file, plus one plugin in your bundler config.',
     link: { href: '/migrate-from-iconify-react', label: 'See the migration guide' },
   },
   {
@@ -28,7 +28,7 @@ export const HOME_FAQ: FaqItem[] = [
   },
   {
     q: 'Will baking icons make my bundle bigger?',
-    a: 'Only by the icons you actually use. Each icon becomes one constant in the module that renders it, usually 100 to 900 bytes, and tree-shakes like any other code. No icon set is ever shipped whole. The runtime is about 2 kB gzipped plus @iconify/utils.',
+    a: 'Only by the icons you actually use. Each icon becomes one constant in the module that renders it, usually 100 to 900 bytes, and tree-shakes like any other code. No icon set is ever shipped whole. The runtime is about 2.4 kB gzipped, with no dependencies besides React.',
   },
   {
     q: 'Can I use icon names that come from a CMS or a database?',
@@ -36,7 +36,7 @@ export const HOME_FAQ: FaqItem[] = [
   },
   {
     q: 'Which bundlers and frameworks are supported?',
-    a: 'Vite 5+, Next.js 14+ with Turbopack or webpack, plain webpack through a loader, and any other build tool through a programmatic transform. It needs React 18+ and Node.js 20+. Static export (output: "export") works, this site is built that way.',
+    a: 'Vite 5+, Next.js 14+ with Turbopack or webpack, plain webpack through a loader, and any other build tool through a programmatic transform. It needs React 18+ and Node.js 20.19+ or 22.12+. Static export (output: "export") works, this site is built that way.',
     link: { href: '/docs/vite', label: 'Read the Vite guide' },
   },
 ];

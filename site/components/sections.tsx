@@ -80,7 +80,7 @@ const FEATURES = {
   sets: {
     icon: <Icon icon="lucide:package" width={22} />,
     title: 'Any Iconify set',
-    text: 'Over 200 000 icons, plus your own IconifyJSON. The runtime is about 2 kB gzipped plus @iconify/utils.',
+    text: 'Over 200 000 icons, plus your own IconifyJSON. The runtime is about 2.4 kB gzipped, with no dependencies besides React.',
   },
 };
 
@@ -155,7 +155,7 @@ export function MigrateSection() {
         </pre>
         <div className="migrate-copy">
           <p>
-            Props behave the same, because rendering goes through @iconify/utils, like in @iconify/react. The transform
+            Props behave the same: rendering produces the same SVG as @iconify/react, checked against @iconify/utils in tests. The transform
             also understands these forms:
           </p>
           <ul className="forms">

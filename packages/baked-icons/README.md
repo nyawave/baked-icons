@@ -20,10 +20,10 @@ export function Header() {
 At build time this becomes:
 
 ```tsx
-const $bi_mdi_home = {"body":"<path fill=\"currentColor\" d=\"M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z\"/>","name":"mdi:home","width":24,"height":24};
+const $bi_mdi$home = {"body":"<path fill=\"currentColor\" d=\"M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z\"/>","name":"mdi:home","width":24,"height":24};
 
 export function Header() {
-  return <h1><Icon icon={$bi_mdi_home} /> Home</h1>;
+  return <h1><Icon icon={$bi_mdi$home} /> Home</h1>;
 }
 ```
 
@@ -35,8 +35,9 @@ export function Header() {
   constant. No icon set is ever shipped wholesale.
 - **Server Components, SSR and the browser.** `<Icon>` has no state, no effects and no
   `"use client"` requirement. Deterministic SVG ids mean no hydration mismatches.
-- **Iconify-compatible rendering.** Uses `@iconify/utils` for the exact same `width`, `height`,
-  `rotate`, `flip`, `color`, `inline` and `title` behaviour as `@iconify/react`.
+- **Iconify-compatible rendering.** The exact same `width`, `height`, `rotate`, `flip`, `color`,
+  `inline` and `title` behaviour (and SVG output) as `@iconify/react`, verified against
+  `@iconify/utils` in the test suite.
 - **Any Iconify icon set.** Install `@iconify-json/<prefix>` (or `@iconify/json` for all of
   them), or point the plugin at your own `IconifyJSON` file.
 - **Vite, Next.js, webpack.** First-class Vite plugin, a `withBakedIcons()` wrapper for Next.js
@@ -44,8 +45,8 @@ export function Header() {
   everything else.
 - **Runtime registry for data-driven icons.** When the icon name only exists at runtime, bake
   a set of candidates and pick from it.
-- **Tiny runtime.** ~2 kB gzipped plus `@iconify/utils`; the transform never ends up in the
-  browser bundle.
+- **Tiny runtime.** ~2.4 kB gzipped, no dependencies besides React; the transform never ends up
+  in the browser bundle.
 
 ## Installation
 
@@ -55,7 +56,7 @@ pnpm add -D @iconify-json/mdi        # any icon set(s) you use...
 pnpm add -D @iconify/json            # ...or every set at once
 ```
 
-Requirements: React 18+, Node.js 20+. Vite 5+ or Next.js 14+ for the built-in integrations.
+Requirements: React 18+, Node.js 20.19+ or 22.12+. Vite 5+ or Next.js 14+ for the built-in integrations.
 
 ## Setup
 
@@ -277,11 +278,11 @@ to control which files the Turbopack rule is attached to.
 
 | entry point                         | exports                                                                                                                   |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `@nyawave/baked-icons`              | `Icon`, `InlineIcon`, `bakeIcon`, `bakeIcons`, `addIcon`, `addIcons`, `addCollection`, `getIcon`, types `IconProps`, `BakedIcon`, `BakeOptions` |
+| `@nyawave/baked-icons`              | `Icon`, `InlineIcon`, `bakeIcon`, `bakeIcons`, `addIcon`, `addIcons`, `addCollection`, `getIcon`, types `IconProps`, `BakedIcon`, `BakeOptions`, `IconifyIcon`, `IconifyJSON` |
 | `@nyawave/baked-icons/vite`         | `default` – Vite plugin factory                                                                                           |
 | `@nyawave/baked-icons/next`         | `withBakedIcons(nextConfig, options?)`, type `NextBakeOptions`                                                            |
 | `@nyawave/baked-icons/loader`       | `default` – webpack / Turbopack loader (CommonJS)                                                                         |
-| `@nyawave/baked-icons/transform`    | `transform`, `createTransformer`, `shouldTransform`, `IconResolver`, `isIconName`, type `TransformResult`                 |
+| `@nyawave/baked-icons/transform`    | `transform`, `createTransformer`, `shouldTransform`, `IconResolver`, `isIconName`, `SourceMap`, types `TransformResult`, `Transformer` |
 
 Both ESM and CommonJS builds ship with TypeScript declarations.
 

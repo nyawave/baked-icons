@@ -128,10 +128,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 `}</Code>
       <p>
-        At build time each name becomes a constant such as <code>$bi_mdi_home</code>, defined once at the top of the
+        At build time each name becomes a constant such as <code>$bi_mdi$home</code>, defined once at the top of the
         module. The props you pass (<code>width</code>, <code>height</code>, <code>rotate</code>, <code>flip</code>,{' '}
-        <code>color</code>, <code>inline</code>, <code>title</code>) are applied at render time through{' '}
-        <code>@iconify/utils</code>, the same library @iconify/react uses, so the output matches.
+        <code>color</code>, <code>inline</code>, <code>title</code>) are applied at render time with the same math as{' '}
+        <code>@iconify/utils</code> (the library @iconify/react uses), so the output matches.
       </p>
 
       <h2 id="client">Client Components and conditional icons</h2>

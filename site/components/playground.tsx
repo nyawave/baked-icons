@@ -31,7 +31,7 @@ const LENGTHS: Record<Field, number> = {
 function describe(name: string, data: BakedIcon) {
   const body = JSON.stringify(data.body).slice(1, -1);
   return {
-    constName: `$bi_${name.replace(/[^a-zA-Z0-9_]/g, '_')}`,
+    constName: `$bi_${name.split(':').join('$').replace(/-/g, '_')}`,
     body: body.length > 64 ? `${body.slice(0, 63)}…` : body,
     width: data.width ?? 16,
     height: data.height ?? 16,
