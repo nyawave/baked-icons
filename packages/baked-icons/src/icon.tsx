@@ -1,14 +1,7 @@
-import type { IconifyJSON } from '@iconify/types';
-import {
-  defaultIconProps,
-  flipFromString,
-  getIconData,
-  iconToSVG,
-  rotateFromString,
-  type IconifyIconCustomisations,
-} from '@iconify/utils';
 import { type CSSProperties, type Ref, type SVGProps, useId, type JSX } from 'react';
-import { replaceIDs } from './replace-ids.ts';
+import { buildSVG, type BuiltSVG, type Customisations, parseFlip, parseRotate, resolveIcon } from './core.ts';
+import type { IconifyJSON } from './iconify.ts';
+import { applyIDs, type IdPlan, planIDs } from './replace-ids.ts';
 import type { BakedIcon } from './types.ts';
 
 // ---------------------------------------------------------------------------
@@ -18,7 +11,9 @@ import type { BakedIcon } from './types.ts';
 // ---------------------------------------------------------------------------
 
 const registry = new Map<string, BakedIcon>();
-const collections = new Map<string, IconifyJSON>();
+const collections = new Map<string, IconifyJSON[]>();
+// collection lookups incl. misses, cleared by addCollection()
+const resolved = new Map<string, BakedIcon | null>();
 const warned = new Set<string>();
 
 /** Register a single icon under `prefix:name`. */
@@ -31,28 +26,30 @@ export function addIcons(icons: Record<string, BakedIcon>): void {
   for (const name in icons) registry.set(name, icons[name]!);
 }
 
-/** Register a whole (or partial) IconifyJSON collection. */
+/** Register a whole (or partial) IconifyJSON collection. Later ones win. */
 export function addCollection(collection: IconifyJSON): void {
-  collections.set(collection.prefix, collection);
+  const list = collections.get(collection.prefix);
+  if (list) list.push(collection);
+  else collections.set(collection.prefix, [collection]);
+  resolved.clear();
 }
 
 /** Look an icon up by `prefix:name`. Returns `null` when unknown. */
 export function getIcon(name: string): BakedIcon | null {
   const direct = registry.get(name);
   if (direct) return direct;
-  const colon = name.indexOf(':');
-  if (colon > 0) {
-    const set = collections.get(name.slice(0, colon));
-    if (set) {
-      const data = getIconData(set, name.slice(colon + 1));
-      if (data) {
-        const baked: BakedIcon = { ...data, name };
-        registry.set(name, baked);
-        return baked;
-      }
+  let icon = resolved.get(name);
+  if (icon === undefined) {
+    icon = null;
+    const colon = name.indexOf(':');
+    const list = colon > 0 ? collections.get(name.slice(0, colon)) : undefined;
+    for (let i = list ? list.length : 0; i-- > 0 && !icon; ) {
+      const data = resolveIcon(list![i]!, name.slice(colon + 1));
+      if (data) icon = { ...data, name };
     }
+    resolved.set(name, icon);
   }
-  return null;
+  return icon;
 }
 
 // ---------------------------------------------------------------------------
@@ -126,6 +123,27 @@ export function InlineIcon(props: IconProps): JSX.Element | null {
   return renderIcon(props, true);
 }
 
+interface Prepared extends BuiltSVG {
+  ids: IdPlan | null;
+}
+
+// per icon object; capped so animated sizes can't grow it unbounded
+const renderCache = new WeakMap<object, Map<string, Prepared>>();
+
+function prepare(data: BakedIcon, custom: Customisations): Prepared {
+  const key = `${custom.width}|${custom.height}|${custom.rotate}|${custom.hFlip}|${custom.vFlip}`;
+  let byKey = renderCache.get(data);
+  let out = byKey?.get(key);
+  if (!out) {
+    const svg = buildSVG(data, custom);
+    out = { attributes: svg.attributes, body: svg.body, ids: planIDs(svg.body) };
+    if (!byKey) renderCache.set(data, (byKey = new Map()));
+    else if (byKey.size >= 16) byKey.clear();
+    byKey.set(key, out);
+  }
+  return out;
+}
+
 function renderIcon(props: IconProps, inlineDefault: boolean): JSX.Element | null {
   const {
     icon,
@@ -154,18 +172,12 @@ function renderIcon(props: IconProps, inlineDefault: boolean): JSX.Element | nul
     return null;
   }
 
-  const customisations: IconifyIconCustomisations = {};
-  if (width !== undefined) customisations.width = width;
-  if (height !== undefined) customisations.height = height;
-  if (hFlip) customisations.hFlip = true;
-  if (vFlip) customisations.vFlip = true;
-  if (flip) flipFromString(customisations, flip);
-  if (rotate !== undefined) {
-    customisations.rotate = typeof rotate === 'number' ? rotate : rotateFromString(rotate);
-  }
+  const custom: Customisations = { width, height, hFlip, vFlip };
+  if (flip) parseFlip(flip, custom);
+  if (rotate !== undefined) custom.rotate = typeof rotate === 'number' ? rotate : parseRotate(rotate);
 
-  const svg = iconToSVG({ ...defaultIconProps, ...data }, customisations);
-  let body = replaceIDs(svg.body, `bi${uid.replace(/[^a-zA-Z0-9_-]/g, '')}-`);
+  const svg = prepare(data, custom);
+  let body = svg.ids ? applyIDs(svg.body, svg.ids, `bi${uid.replace(/[^a-zA-Z0-9_-]/g, '')}-`) : svg.body;
   if (title) body = `<title>${escapeText(title)}</title>${body}`;
 
   const mergedStyle: CSSProperties | undefined =
@@ -173,12 +185,12 @@ function renderIcon(props: IconProps, inlineDefault: boolean): JSX.Element | nul
       ? { ...(color !== undefined ? { color } : {}), ...(inline ? { verticalAlign: '-0.125em' } : {}), ...style }
       : style;
 
-  const classes = ['iconify'];
+  let classes = 'iconify';
   if (data.name) {
     const colon = data.name.indexOf(':');
-    classes.push(`iconify--${colon > 0 ? data.name.slice(0, colon) : data.name}`);
+    classes += ` iconify--${colon > 0 ? data.name.slice(0, colon) : data.name}`;
   }
-  if (className) classes.push(className);
+  if (className) classes += ` ${className}`;
 
   return (
     <svg
@@ -189,7 +201,7 @@ function renderIcon(props: IconProps, inlineDefault: boolean): JSX.Element | nul
       {...rest}
       {...svg.attributes}
       ref={ref}
-      className={classes.join(' ')}
+      className={classes}
       style={mergedStyle}
       dangerouslySetInnerHTML={{ __html: body }}
     />

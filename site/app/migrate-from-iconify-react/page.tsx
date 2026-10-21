@@ -19,7 +19,7 @@ export const metadata = pageMetadata({
 const FAQ: FaqItem[] = [
   {
     q: 'Will my icons look exactly the same after migrating?',
-    a: 'Yes. Both packages render through @iconify/utils with the same icon data from the Iconify sets, so width, height, rotate, flip and color produce the same SVG. The only visible difference is that icons are there on the first frame.',
+    a: 'Yes. Both packages render the same icon data from the Iconify sets the same way (baked-icons is tested byte for byte against @iconify/utils), so width, height, rotate, flip and color produce the same SVG. The only visible difference is that icons are there on the first frame.',
   },
   {
     q: 'Can I migrate one file at a time?',

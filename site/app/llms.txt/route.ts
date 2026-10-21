@@ -25,7 +25,7 @@ pnpm add -D @iconify-json/mdi @iconify-json/lucide   # the icon sets you use
 pnpm add -D @iconify/json                           # or every set at once
 \`\`\`
 
-Requires React 18+ and Node.js 20+. Built-in integrations need Vite 5+ or Next.js 14+.
+Requires React 18+ and Node.js 20.19+ or 22.12+. Built-in integrations need Vite 5+ or Next.js 14+.
 
 ## Setup (one config change)
 

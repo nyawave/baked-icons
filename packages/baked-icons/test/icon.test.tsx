@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
-import { Icon, InlineIcon, addIcons, type BakedIcon } from '../src/index.ts';
+import { Icon, InlineIcon, addCollection, addIcons, getIcon, type BakedIcon } from '../src/index.ts';
 
 const home: BakedIcon = {
   body: '<path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"/>',
@@ -53,5 +53,44 @@ describe('<Icon />', () => {
     expect(html).toContain(`url(#${ids[0]})`);
     expect(html).toContain(`url(#${ids[1]})`);
     expect(renderToStaticMarkup(<><Icon icon={grad} /><Icon icon={grad} /></>)).toBe(html);
+  });
+
+  it('keeps every partial collection added for a prefix, latest first', () => {
+    addCollection({ prefix: 'pc', icons: { a: { body: '<a/>' }, shared: { body: '<old/>' } } });
+    expect(getIcon('pc:shared')!.body).toBe('<old/>');
+    addCollection({
+      prefix: 'pc',
+      width: 24,
+      icons: { b: { body: '<b/>' }, shared: { body: '<new/>' } },
+      aliases: { 'b-flipped': { parent: 'b', hFlip: true } },
+    });
+    expect(getIcon('pc:a')).toEqual({ body: '<a/>', name: 'pc:a' });
+    expect(getIcon('pc:shared')!.body).toBe('<new/>');
+    expect(getIcon('pc:b-flipped')).toEqual({ body: '<b/>', width: 24, hFlip: true, name: 'pc:b-flipped' });
+    expect(getIcon('pc:missing')).toBeNull();
+    expect(getIcon('pc:constructor')).toBeNull();
+  });
+
+  it('renders the same icon with different customisations correctly (render cache)', () => {
+    const a = renderToStaticMarkup(<Icon icon={home} width={48} />);
+    const b = renderToStaticMarkup(<Icon icon={home} rotate="90deg" />);
+    const c = renderToStaticMarkup(<Icon icon={home} width={48} />);
+    expect(a).toContain('width="48" height="48"');
+    expect(b).toContain('rotate(90 12 12)');
+    expect(b).not.toContain('width="48"');
+    expect(c).toBe(a);
+    for (let i = 0; i < 40; i++) renderToStaticMarkup(<Icon icon={home} width={i} />);
+    expect(renderToStaticMarkup(<Icon icon={home} width={48} />)).toBe(a);
+  });
+
+  it('keeps all <defs> outside the transform group', () => {
+    const icon: BakedIcon = {
+      body: '<defs><clipPath id="c"><path d="M0 0"/></clipPath></defs><g clip-path="url(#c)"/><defs><linearGradient id="g"/></defs><path fill="url(#g)"/>',
+    };
+    const html = renderToStaticMarkup(<Icon icon={icon} rotate={1} />);
+    const inner = html.slice(html.indexOf('>') + 1, html.lastIndexOf('</svg>'));
+    expect(inner.startsWith('<defs><clipPath')).toBe(true);
+    expect(inner).toMatch(/^<defs>.*<\/defs><g transform="rotate\(90 8 8\)">(?!.*<defs).*<\/g>$/);
+    expect(inner.match(/<\/clipPath>/g)).toHaveLength(1);
   });
 });

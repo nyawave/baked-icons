@@ -37,6 +37,10 @@ export interface NextBakeOptions extends Omit<BakeOptions, 'iconSets'> {
  * ```
  */
 export function withBakedIcons<T extends object>(config: T = {} as T, options: NextBakeOptions = {}): T {
+  if (typeof config === 'function') {
+    const factory = config as (...args: unknown[]) => object | Promise<object>;
+    return (async (...args: unknown[]) => withBakedIcons(await factory(...args), options)) as T;
+  }
   const nextConfig = config as NextLikeConfig;
   const { turbopackGlobs = ['*.tsx', '*.jsx', '*.ts', '*.js'], ...loaderOptions } = options;
   const loader = { loader: '@nyawave/baked-icons/loader', options: loaderOptions };

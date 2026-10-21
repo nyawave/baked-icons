@@ -1,4 +1,4 @@
-import type { IconifyIcon, IconifyJSON } from '@iconify/types';
+import type { IconifyIcon, IconifyJSON } from './iconify.ts';
 
 /**
  * Icon data that has been baked into the bundle at build time.

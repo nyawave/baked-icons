@@ -236,15 +236,6 @@ importers:
 
   packages/baked-icons:
     dependencies:
-      '@iconify/types':
-        specifier: ^2.0.0
-        version: 2.0.0
-      '@iconify/utils':
-        specifier: ^3.1.7
-        version: 3.1.7
-      magic-string:
-        specifier: ^1.4.2
-        version: 1.4.2
       next:
         specifier: '>=14'
         version: 16.3.8(@types/node@26.6.4)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -258,6 +249,9 @@ importers:
       '@iconify-json/mdi':
         specifier: ^1.2.3
         version: 1.2.3
+      '@iconify/utils':
+        specifier: ^3.1.7
+        version: 3.1.7
       '@types/node':
         specifier: ^26.6.4
         version: 26.6.4

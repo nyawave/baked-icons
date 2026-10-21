@@ -67,8 +67,8 @@ pnpm add -D @iconify-json/mdi @iconify-json/lucide @iconify-json/ph
 `}</Code>
       <p>
         Prefer individual sets: <code>@iconify/json</code> contains all 200 000+ icons and weighs hundreds of
-        megabytes, which only slows down installs. Requirements: Vite 5 or newer, React 18 or newer, Node.js 20 or
-        newer.
+        megabytes, which only slows down installs. Requirements: Vite 5 or newer, React 18 or newer, Node.js 20.19+
+        or 22.12+.
       </p>
 
       <h2 id="config">Configure vite.config.ts</h2>
@@ -102,8 +102,8 @@ export function App() {
 }
 `}</Code>
       <p>
-        After the transform the file defines <code>$bi_mdi_home</code>, <code>$bi_ph_cat</code> and{' '}
-        <code>$bi_lucide_flame</code> once at the top and passes them to <code>&lt;Icon&gt;</code>. Each constant is a
+        After the transform the file defines <code>$bi_mdi$home</code>, <code>$bi_ph$cat</code> and{' '}
+        <code>$bi_lucide$flame</code> once at the top and passes them to <code>&lt;Icon&gt;</code>. Each constant is a
         few hundred bytes and only exists in the chunk that renders it, so code splitting and tree-shaking work as
         usual. <code>InlineIcon</code> is <code>Icon</code> with <code>vertical-align: -0.125em</code>, so it sits on
         the text baseline.
@@ -207,17 +207,17 @@ bakedIcons({
       </p>
       <Code file="src/App.tsx (after the transform)">{`
 import { Icon } from '@nyawave/baked-icons';
-const $bi_mdi_home = {"body":"<path fill=\\"currentColor\\" d=\\"M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z\\"/>","name":"mdi:home","width":24,"height":24};
+const $bi_mdi$home = {"body":"<path fill=\\"currentColor\\" d=\\"M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z\\"/>","name":"mdi:home","width":24,"height":24};
 
 export function App() {
-  return <h1><Icon icon={$bi_mdi_home} width={32} /> Dashboard</h1>;
+  return <h1><Icon icon={$bi_mdi$home} width={32} /> Dashboard</h1>;
 }
 `}</Code>
       <p>
         The same icon used twice in one module is defined once. An icon used in two lazily loaded routes is defined in
         each of their chunks, so a route never pulls icon data it does not render. Nothing from the transform itself
-        reaches the browser: the runtime is the <code>&lt;Icon&gt;</code> component, about 2 kB gzipped plus{' '}
-        <code>@iconify/utils</code>.
+        reaches the browser: the runtime is the <code>&lt;Icon&gt;</code> component, about 2.4 kB gzipped,
+        with no dependencies besides React.
       </p>
 
       <h2 id="troubleshooting">Troubleshooting</h2>
